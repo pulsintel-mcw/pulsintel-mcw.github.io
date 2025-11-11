@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>USCIS Case Tracking – MyCaseWatch</title>
+  <meta name="description" content="Check USCIS case status with a privacy-first experience on MyCaseWatch.">
+  <style>
+    body{max-width:820px;margin:40px auto;font:16px/1.6 system-ui,Segoe UI,Roboto,Arial;color:#222}
+    header{margin-bottom:2rem}
+    h1{font-size:1.9rem;margin:0 0 .25rem 0}
+    .tagline{color:#555;margin:.25rem 0 0}
+    nav a{color:#0069d9;text-decoration:none}
+    nav a:hover{text-decoration:underline}
+    .card{border:1px solid #eee;border-radius:8px;padding:1rem 1.2rem;margin:1rem 0}
+    label{display:block;margin:.6rem 0 .25rem}
+    input[type="text"]{width:100%;max-width:420px;padding:.55rem .7rem;border:1px solid #ccc;border-radius:6px;font:16px/1.4 system-ui,Segoe UI,Roboto,Arial}
+    .actions{margin-top:1rem}
+    .btn{display:inline-block;background:#198754;color:#fff;padding:.6rem 1.1rem;border-radius:6px;text-decoration:none;border:none;cursor:pointer}
+    .btn:hover{background:#146c43}
+    .btn-secondary{background:#0069d9}
+    .btn-secondary:hover{background:#0053aa}
+    .muted{color:#666;font-size:.95rem}
+    .note{background:#f8f9fa;border:1px solid #eee;border-radius:6px;padding:.75rem;margin-top:1rem}
+    footer{margin-top:3rem;padding:1rem 0;border-top:1px solid #eee;font-size:.95rem;text-align:center}
+    footer a{margin-left:1rem}
+    .error{color:#b00020;margin-top:.5rem}
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/">← Home</a>
+  </nav>
+
+  <header>
+    <h1>USCIS Case Tracking</h1>
+    <p class="tagline">Enter your receipt number to check the latest status.</p>
+  </header>
+
+  <section class="card" aria-labelledby="uscis-form-title">
+    <h2 id="uscis-form-title" style="margin:0 0 .5rem 0;">Check status</h2>
+
+    <!-- Receipt format: 3 letters + 10 digits (e.g., ABC1234567890 is 3+10=13 chars) -->
+    <form id="uscis-form" novalidate>
+      <label for="receipt">USCIS Receipt Number</label>
+      <input
+        id="receipt"
+        name="receipt"
+        type="text"
+        inputmode="latin"
+        autocomplete="off"
+        placeholder="e.g., MSC1234567890"
+        pattern="^[A-Za-z]{3}[0-9]{10}$"
+        maxlength="13"
+        aria-describedby="receipt-help"
+        required
+      >
+      <div id="receipt-help" class="muted">
+        Format: 3 letters followed by 10 digits (total 13 characters).
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn">Check Status</button>
+        
+      </div>
+
+      <div id="form-error" class="error" role="alert" style="display:none;"></div>
+
+      <div class="note muted">
+        <strong>Note:</strong> MyCaseWatch provides a privacy-first experience. Receipt numbers are used only to retrieve status and are not persisted. See our
+        <a href="/privacy">Privacy Policy</a> for details.
+      </div>
+    </form>
+  </section>
+
+  <section class="card" id="result-card" style="display:none" aria-live="polite">
+    <h2 style="margin:0 0 .5rem 0;">Result</h2>
+    <div id="result-body" class="muted">Loading…</div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    © 2025 MyCaseWatch. All rights reserved.
+    <a href="/about">About</a>
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+    <a href="mailto:dev@mycasewatch.com">Contact</a>
+  </footer>
+
+  <script>
+    // Uppercase the first 3 letters automatically; keep digits as typed
+    const input = document.getElementById('receipt');
+    input.addEventListener('input', () => {
+      const v = input.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+      input.value = v.slice(0, 13);
+    });
+
+    const form = document.getElementById('uscis-form');
+    const errorEl = document.getElementById('form-error');
+    const resultCard = document.getElementById('result-card');
+    const resultBody = document.getElementById('result-body');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorEl.style.display = 'none';
+      resultCard.style.display = 'none';
+
+      const receipt = input.value.trim();
+      const pattern = /^[A-Z]{3}[0-9]{10}$/;
+
+      if (!pattern.test(receipt)) {
+        errorEl.textContent = 'Please enter a valid receipt number (3 letters + 10 digits).';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      // TODO: Replace this placeholder with a real backend call when ready.
+      // Example: const res = await fetch('https://api.mycasewatch.com/v1/uscis/status?receipt=' + encodeURIComponent(receipt));
+      // For now, show a friendly placeholder result.
+      resultBody.innerHTML = `
+        <p><strong>Receipt:</strong> ${receipt}</p>
+        <p>This is a preview UI. Connect the backend to retrieve live status from the official system.</p>
+      `;
+      resultCard.style.display = 'block';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+# OS/Editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Logs / builds (future-proof)
+*.log
+dist/
+build/
+node_modules/
+
+# Env/config (future)
+.env
+.env.*
+
+# Personal notes
+todo.txt
+*.todo
